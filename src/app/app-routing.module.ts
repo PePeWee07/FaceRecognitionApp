@@ -5,14 +5,14 @@ import { FacesComponent } from './faces/faces.component';
 const routes: Routes = [
   {
     path: 'faces',
-    component: FacesComponent
+    component: FacesComponent,
   },
-  { path: '', pathMatch: 'full', redirectTo: 'home' },
-  { path: '**', pathMatch: 'full', redirectTo: 'home' },
+  { path: '', pathMatch: 'full', component: FacesComponent },
+  { path: '**', pathMatch: 'full', component: FacesComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

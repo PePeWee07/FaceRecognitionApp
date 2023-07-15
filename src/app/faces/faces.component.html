@@ -1,62 +1,42 @@
-<div class="fondo">
-  <ng-template #radiologyTZ>
-    <div class="card-fondo-upload">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-4 mx-auto mt-5">
-            <!-- Card -->
-            <div class="card perspective sombra">
-              <!-- Header Card -->
-              <div class="card-header text-center" style="padding: 1rem">
-                <i
-                  class="bi bi-cloud-arrow-up-fill"
-                  style="font-size: 5rem; color: white"
-                >
-                  <h4>Upload a Dicom</h4></i
-                >
-              </div>
-              <!-- Body Card -->
-              <div class="card-body" style="background-color: white">
-                <!-- File -->
-                <input
-                  type="file"
-                  class="d-none"
-                  (change)="onPhotoSelected($event)"
-                  #photoInput
-                  multiple
-                />
-                <!-- Img -->
-                <div class="img-upload">
-                  <img
-                    [src]="photoSelected || '../../assets/imgs/no-image2.png'"
-                    class="img-fluid"
-                    alt="No image"
-                    (click)="photoInput.click()"
-                  />
-                  <h6 *ngIf="hiddenTxt != false" class="text-center txt-up">
-                    Click on the image to upload a photo
-                  </h6>
-                </div>
-                <!-- Buttton -->
-                <button
-                  class="btn btn-success btn-block mt-3"
-                  [disabled]="displayButton"
-                  (click)="loading()"
-                >
-                  Siguiente
-                </button>
+<div class="container-fluid">
+  <div class="row align-items-center" style="height: 100vh;">
+    <div class="col-md-6" style="border: 1px dashed green;">
+      <div class="upload">
+        <input type="file" (change)="onFileSelected($event)">
+
+        <div *ngIf="uploading" style="color: white;">
+          <!-- Spinner de espera -->
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p>Uploading image...</p>
+        </div>
+
+        <div *ngIf="imagePreviewUrl">
+          <!-- Previsualización de la imagen -->
+          <div class="d-flex justify-content-center">
+            <img [src]="imagePreviewUrl"  height="80%" width="80%" alt="Image Preview">
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-6" style=" color: white; border: 1px dashed red;">
+      <h3 class="text-center">Personas Econtradas: <h2 class="perspective">{{ personasEcontradas }}</h2></h3>
+      <div class="row justify-content-center">
+        <ng-container *ngIf="viewRostros">
+          <div class="col-md-3 mx-2 my-2" *ngFor="let item of serverResponse.server">
+            <div class="card perspective" >
+              <img [src]="'data:image/png;base64,' + item.imagen" class="card-img-top" alt="iamgenRecortada">
+              <div class="card-body">
+                <button class="btn btn-info" (click)="copiarTexto()">Copiar</button>
+                  <p class="card-text" style="height: 100px; overflow-y: scroll;">{{ item.encoding }}</p>
               </div>
             </div>
           </div>
-        </div>
+        </ng-container>
       </div>
-    </div>
-  </ng-template>
-
-  <ng-container *ngIf="viewUpload; else radiologyTZ">
-    <div class="container-fluid text-center">
 
     </div>
-  </ng-container>
-
+  </div>
 </div>
