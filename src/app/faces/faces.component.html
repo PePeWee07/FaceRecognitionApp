@@ -1,1 +1,62 @@
-<p>faces works!</p>
+<div class="fondo">
+  <ng-template #radiologyTZ>
+    <div class="card-fondo-upload">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 mx-auto mt-5">
+            <!-- Card -->
+            <div class="card perspective sombra">
+              <!-- Header Card -->
+              <div class="card-header text-center" style="padding: 1rem">
+                <i
+                  class="bi bi-cloud-arrow-up-fill"
+                  style="font-size: 5rem; color: white"
+                >
+                  <h4>Upload a Dicom</h4></i
+                >
+              </div>
+              <!-- Body Card -->
+              <div class="card-body" style="background-color: white">
+                <!-- File -->
+                <input
+                  type="file"
+                  class="d-none"
+                  (change)="onPhotoSelected($event)"
+                  #photoInput
+                  multiple
+                />
+                <!-- Img -->
+                <div class="img-upload">
+                  <img
+                    [src]="photoSelected || '../../assets/imgs/no-image2.png'"
+                    class="img-fluid"
+                    alt="No image"
+                    (click)="photoInput.click()"
+                  />
+                  <h6 *ngIf="hiddenTxt != false" class="text-center txt-up">
+                    Click on the image to upload a photo
+                  </h6>
+                </div>
+                <!-- Buttton -->
+                <button
+                  class="btn btn-success btn-block mt-3"
+                  [disabled]="displayButton"
+                  (click)="loading()"
+                >
+                  Siguiente
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="viewUpload; else radiologyTZ">
+    <div class="container-fluid text-center">
+
+    </div>
+  </ng-container>
+
+</div>

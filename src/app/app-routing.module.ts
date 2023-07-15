@@ -4,11 +4,11 @@ import { FacesComponent } from './faces/faces.component';
 
 const routes: Routes = [
   {
-    path: '/faces',
+    path: 'faces',
     component: FacesComponent
   },
-  { path: '', pathMatch: 'full', component: FacesComponent },
-  { path: '**', pathMatch: 'full', component: FacesComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
+  { path: '**', pathMatch: 'full', redirectTo: 'home' },
 ];
 
 @NgModule({

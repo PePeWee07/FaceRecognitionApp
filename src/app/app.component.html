@@ -1,0 +1,12 @@
+<input type="file" (change)="onFileSelected($event)">
+<div *ngIf="uploading">
+  <!-- Spinner de espera -->
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p>Uploading image...</p>
+</div>
+
+<div *ngIf="!uploading && fileSelected">
+  <pre>{{ response | json }}</pre>
+</div>
