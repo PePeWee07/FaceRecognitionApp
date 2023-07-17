@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UploadFileService } from '../service/upload-file.service';
 import { Faces, Server } from '../Interfaces/faces';
-import Swal from "sweetalert2"
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-faces',
   templateUrl: './faces.component.html',
-  styleUrls: ['./faces.component.scss']
+  styleUrls: ['./faces.component.scss'],
 })
 export class FacesComponent implements OnInit {
-
   fileSelected = false;
   uploading = false;
   response: Faces[] = [];
@@ -19,7 +18,7 @@ export class FacesComponent implements OnInit {
   personasEcontradas: number = 0;
   viewRostros: boolean = false;
 
-  constructor(private facialRecognitionService: UploadFileService) { }
+  constructor(private facialRecognitionService: UploadFileService) {}
 
   onFileSelected(event: any) {
     this.fileSelected = true;
@@ -35,16 +34,15 @@ export class FacesComponent implements OnInit {
     reader.readAsDataURL(file);
 
     this.facialRecognitionService.uploadImage(file).subscribe(
-      res => {
+      (res) => {
         this.uploading = false;
-        this.viewRostros= true
+        this.viewRostros = true;
 
         this.response = res;
         this.serverResponse = res;
-        this.personasEcontradas = this.serverResponse.server.length
-
+        this.personasEcontradas = this.serverResponse.server.length;
       },
-      error => {
+      (error) => {
         this.uploading = false;
         console.log(error);
         const Toast = Swal.mixin({
@@ -54,63 +52,76 @@ export class FacesComponent implements OnInit {
           timer: 3000,
           timerProgressBar: true,
           didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-          }
-        })
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
 
         Toast.fire({
           icon: 'error',
-          title: error
-        })
+          title: error,
+        });
+      }
+    );
+  }
+
+  inputEncodingStr: string = "";
+  resultado: any;
+  reconocimiento() {
+    this.facialRecognitionService.reconocimiento('['+ this.inputEncodingStr +']').subscribe(
+      (res) => {
+        console.log(res);
+        this.resultado = res;
+      },
+      (err) => {
+        console.log(err);
       }
     );
   }
 
   copiarTexto() {
     const texto = document.querySelector('.card-body p')!.textContent;
-    navigator.clipboard.writeText(texto!).then(() => {
-      console.log('Texto copiado: ' + texto);
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer)
-          toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-      })
+    navigator.clipboard
+      .writeText(texto!)
+      .then(() => {
+        console.log('Texto copiado: ' + texto);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
 
-      Toast.fire({
-        icon: 'success',
-        title: 'Texto Copiado'
+        Toast.fire({
+          icon: 'success',
+          title: 'Texto Copiado',
+        });
       })
-    }).catch((error) => {
-      console.error('Error al copiar el texto: ' + error);
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer)
-          toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-      })
+      .catch((error) => {
+        console.error('Error al copiar el texto: ' + error);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
 
-      Toast.fire({
-        icon: 'error',
-        title: 'Errror al copiar'
-      })
-    });
+        Toast.fire({
+          icon: 'error',
+          title: 'Errror al copiar',
+        });
+      });
   }
 
-
-
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

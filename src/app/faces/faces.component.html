@@ -1,4 +1,14 @@
 <div class="container-fluid">
+  <div class="row" style="color: white">
+    <div class="col-12">
+      <input type="text" [(ngModel)]="inputEncodingStr" placeholder="Ingrese el encoding" class="input-text">
+      <button class="btn-reconocer" (click)="reconocimiento()">Reconocer</button>
+      <div *ngIf="resultado" class="resultado">
+        <p>{{resultado.Server.nombre}} {{resultado.Server.apellido}}</p>
+      </div>
+    </div>
+  </div>
+
   <div class="row align-items-center" style="height: 100vh;">
     <div class="col-md-6" style="border: 1px dashed green;">
       <div class="upload">
