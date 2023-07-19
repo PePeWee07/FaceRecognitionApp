@@ -1,13 +1,6 @@
 <div class="container-fluid">
-  <div class="row" style="color: white">
-    <div class="col-12">
-      <input type="text" [(ngModel)]="inputEncodingStr" placeholder="Ingrese el encoding" class="input-text">
-      <button class="btn-reconocer" (click)="reconocimiento()">Reconocer</button>
-      <div *ngIf="resultado" class="resultado">
-        <p>{{resultado.Server.nombre}} {{resultado.Server.apellido}}</p>
-      </div>
-    </div>
-  </div>
+
+
 
   <div class="row align-items-center" style="height: 100vh;">
     <div class="col-md-6" style="border: 1px dashed green;">
@@ -34,13 +27,25 @@
     <div class="col-md-6" style=" color: white; border: 1px dashed red;">
       <h3 class="text-center">Personas Econtradas: <h2 class="perspective">{{ personasEcontradas }}</h2></h3>
       <div class="row justify-content-center">
-        <ng-container *ngIf="viewRostros">
-          <div class="col-md-3 mx-2 my-2" *ngFor="let item of serverResponse.server">
-            <div class="card perspective" >
+        <ng-container>
+          <div class="col-md-3 mx-2 my-2" *ngFor="let item of mensaje">
+            <div class="card perspective">
               <img [src]="'data:image/png;base64,' + item.imagen" class="card-img-top" alt="iamgenRecortada">
               <div class="card-body">
-                <button class="btn btn-info" (click)="copiarTexto()">Copiar</button>
+
                   <p class="card-text" style="height: 100px; overflow-y: scroll;">{{ item.encoding }}</p>
+
+                  <div *ngIf="item.nombre == 'No'">
+                    <input type="text"  [value]="item.encoding">
+                    <label for="">Nombre</label>
+                    <input type="text" [(ngModel)]="object.nombre" placeholder="Ingrese el nombre">
+                    <label for="">Apellido</label>
+                    <input type="text" [(ngModel)]="object.apellido"  placeholder="Ingrese el apellido">
+                    <button class="btn btn-primary" (click)="guardarPerson(item.encoding)">Guardar</button>
+                  </div>
+
+                  <h4>Nombres:</h4>
+                  <p>{{item.nombre}} {{item.apellido}}</p>
               </div>
             </div>
           </div>
@@ -49,4 +54,5 @@
 
     </div>
   </div>
+
 </div>

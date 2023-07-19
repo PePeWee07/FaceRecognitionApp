@@ -27,4 +27,8 @@ export class UploadFileService {
 
     return this.http.post<any>(this.Url+'reconocer', requestBody);
   }
+
+  guardarPersona(objectData: any): Observable<any> {
+    return this.http.post<any>(this.Url+"guardar", objectData);
+  }
 }
