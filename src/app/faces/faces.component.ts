@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UploadFileService } from '../service/upload-file.service';
-import { ServerClass, Server } from '../Interfaces/faces';
+import { ServerClass, Server, Persona } from '../Interfaces/faces';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -39,9 +39,14 @@ export class FacesComponent implements OnInit {
         this.uploading = false;
         this.viewRostros = true;
 
+        console.log("Respuesta: ", res);
+
           res.server.forEach(async (server: Server) => {
             try {
               const resultado = await this.reconocimiento(server.encoding);
+              // server.nombre = resultado.nombre ? resultado.nombre : "No";
+              // server.apellido = resultado.apellido ? resultado.apellido : "Registrado";
+              // server.similitud = resultado.similitud ? resultado.similitud : 0;
               server.nombre = resultado.nombre;
               server.apellido = resultado.apellido;
               server.similitud = resultado.similitud;
@@ -60,6 +65,7 @@ export class FacesComponent implements OnInit {
       (error) => {
         this.uploading = false;
         console.log(error);
+
         const Toast = Swal.mixin({
           toast: true,
           position: 'top-end',
@@ -85,7 +91,7 @@ export class FacesComponent implements OnInit {
   async reconocimiento(encoding: any): Promise<ServerClass> {
     try {
       const res = await this.facialRecognitionService.reconocimiento('[' + encoding + ']').toPromise();
-      console.log(res);
+      // console.log(res);
 
       const apellido = res.server.apellido;
       const nombre = res.server.nombre;
@@ -98,116 +104,99 @@ export class FacesComponent implements OnInit {
 
       return resultado;
     } catch (err) {
+      this.mensaje = [];
       console.log(err);
-      throw err;
+      // throw err;
+      throw null;
     }
   }
 
-  object = {
-    "encoding": "",
-    "nombre": null,
-    "apellido": null
-    }
+  persona: Persona =  new Persona();
 
-  guardarPerson(ecoding : any) {
-    if(this.object.apellido == null){
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer);
-          toast.addEventListener('mouseleave', Swal.resumeTimer);
-        },
-      });
+  async guardarPerson(persona : Persona, ecoding: number[]) {
 
-      Toast.fire({
-        icon: 'warning',
-        title: 'Ingrese un apellido',
-      });
-    } else if (this.object.nombre == null){
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer);
-          toast.addEventListener('mouseleave', Swal.resumeTimer);
-        },
-      });
+      console.log("Persona enconding: ", ecoding);
 
-      Toast.fire({
-        icon: 'warning',
-        title: 'Ingrese un nombre',
-      });
-    } else if (this.object.encoding == null){
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener('mouseenter', Swal.stopTimer);
-          toast.addEventListener('mouseleave', Swal.resumeTimer);
-        },
-      });
+      const { value: formValues } = await Swal.fire({
+        title: 'Guardar Persona',
+        html:
+        `
+        <!-- Encoding -->
+        <label class="form-label">Encoding:</label>
+        <input
+          type="text"
+          class="form-control"
+          disabled
+          id="swal-encoding"
+        />
 
-      Toast.fire({
-        icon: 'warning',
-        title: 'Encoding no encontrado',
-      });
-    } else {
-      this.object.encoding = "[" + ecoding + "]";
-      this.facialRecognitionService.guardarPersona(this.object).subscribe(
-        (response) => {
-          console.log('Objeto guardado correctamente:', response);
-          const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer);
-              toast.addEventListener('mouseleave', Swal.resumeTimer);
-            },
-          });
+        <!-- Nombre -->
+        <label class="form-label">Nombre:</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Ingrese el nombre"
+          id="swal-nombre"
+        />
 
-          Toast.fire({
-            icon: 'success',
-            title: 'Objeto guardado correctamente',
-          });
-        },
-        (error) => {
-          console.error('Error al guardar el objeto:', error);
-          const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener('mouseenter', Swal.stopTimer);
-              toast.addEventListener('mouseleave', Swal.resumeTimer);
-            },
-          });
+        <!-- Apellido -->
+        <label class="form-label">Apellido:</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Ingrese el apellido"
+          id="swal-apellido"
+        />
 
-          Toast.fire({
-            icon: 'error',
-            title: error,
-          });
+        `,
+        focusConfirm: true,
+          showCancelButton: true,
+          cancelButtonText: "Cancelar",
+          cancelButtonColor: "#d33",
+          didOpen: () => {
+            (<HTMLInputElement>document.getElementById('swal-encoding')!).value = ecoding.join(', ')!;
+          },
+        preConfirm: () => {
+          const savePerson: Persona = {
+            encoding: "[" + (<HTMLInputElement>document.getElementById('swal-encoding')!).value + "]",
+            nombre: (<HTMLInputElement>document.getElementById('swal-nombre')!).value,
+            apellido: (<HTMLInputElement>document.getElementById('swal-apellido')!).value
+          };
+          this.facialRecognitionService.guardarPersona( savePerson ).subscribe(
+              (resp: any) => {
+                console.log("Respuesta gaurdar persona: ", resp);
+
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 2000,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                  }
+                })
+                Toast.fire({
+                  icon: 'success',
+                  title: `Se guardo la persona`
+                })
+              }, (err) => {
+                console.log("Error: ",err);
+                const errorServidor = err.error.mensaje;
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: `${errorServidor}`,
+                })
+          })
         }
-      );
-    }
+      })
+
   }
 
 
-  copiarTexto() {
+  /* copiarTexto() {
     const texto = document.querySelector('.card-body p')!.textContent;
     navigator.clipboard
       .writeText(texto!)
@@ -249,7 +238,7 @@ export class FacesComponent implements OnInit {
           title: 'Errror al copiar',
         });
       });
-  }
+  } */
 
   ngOnInit(): void {}
 }

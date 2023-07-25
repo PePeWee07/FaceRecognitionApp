@@ -21,3 +21,9 @@ export interface ServerClass {
   nombre:    string;
   similitud: number;
 }
+
+export class Persona {
+    encoding?: string;
+    nombre?: string;
+    apellido?: string
+}

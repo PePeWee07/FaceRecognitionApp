@@ -32,20 +32,12 @@
             <div class="card perspective">
               <img [src]="'data:image/png;base64,' + item.imagen" class="card-img-top" alt="iamgenRecortada">
               <div class="card-body">
-
-                  <p class="card-text" style="height: 100px; overflow-y: scroll;">{{ item.encoding }}</p>
-
-                  <div *ngIf="item.nombre == 'No'">
-                    <input type="text"  [value]="item.encoding">
-                    <label for="">Nombre</label>
-                    <input type="text" [(ngModel)]="object.nombre" placeholder="Ingrese el nombre">
-                    <label for="">Apellido</label>
-                    <input type="text" [(ngModel)]="object.apellido"  placeholder="Ingrese el apellido">
-                    <button class="btn btn-primary" (click)="guardarPerson(item.encoding)">Guardar</button>
-                  </div>
-
+                  <!-- <p class="card-text" style="height: 100px; overflow-y: scroll;">{{ item.encoding }}</p> -->
                   <h4>Nombres:</h4>
                   <p>{{item.nombre}} {{item.apellido}}</p>
+                  <div *ngIf="item.nombre == 'No'">
+                    <button class="btn btn-warning" (click)="guardarPerson(persona, item.encoding)">Guardar</button>
+                  </div>
               </div>
             </div>
           </div>
