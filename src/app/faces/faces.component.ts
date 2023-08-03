@@ -12,7 +12,8 @@ export class FacesComponent implements OnInit {
   fileSelected = false;
   uploading = false;
 
-  mensaje: Server[] = [];
+  mensaje: any[] = [];
+  respuesta: any[] = [];
   personasEcontradas: number = 0;
 
   imagePreviewUrl: any;
@@ -35,21 +36,32 @@ export class FacesComponent implements OnInit {
 
     this.facialRecognitionService.uploadImage(file).subscribe(
       async (res) => {
+        this.respuesta = [];
         this.mensaje = [];
         this.uploading = false;
         this.viewRostros = true;
 
         console.log("Respuesta: ", res);
+        res.server.forEach( (server: Server) => {
+          this.respuesta.push(server);
+        });
+        console.log("Respuesta: ", this.respuesta);
+
 
           res.server.forEach(async (server: Server) => {
+            // console.log("Server: ", server.encodings);
             try {
-              const resultado = await this.reconocimiento(server.encoding);
-              // server.nombre = resultado.nombre ? resultado.nombre : "No";
-              // server.apellido = resultado.apellido ? resultado.apellido : "Registrado";
-              // server.similitud = resultado.similitud ? resultado.similitud : 0;
-              server.nombre = resultado.nombre;
-              server.apellido = resultado.apellido;
-              server.similitud = resultado.similitud;
+              if (server.encodings.length  == 1) {
+                console.log("No se pudo obtener el encoding en alguna imagen");
+                server.nombre = "Error";
+                server.apellido =  "Error";
+                server.similitud = 0;
+              } else {
+                const resultado = await this.reconocimiento(server.encodings);
+                server.nombre = resultado.nombre;
+                server.apellido = resultado.apellido;
+                server.similitud = resultado.similitud;
+              }
             } catch (error) {
               // En caso de error, se asignan valores predeterminados.
               server.nombre = "No";
@@ -59,7 +71,9 @@ export class FacesComponent implements OnInit {
             this.mensaje.push(server);
             this.personasEcontradas = this.mensaje.length;
           });
-        console.log("Mensaje: ", this.mensaje);
+
+          console.log("Mensaje: ", this.mensaje);
+
 
       },
       (error) => {
@@ -80,7 +94,7 @@ export class FacesComponent implements OnInit {
 
         Toast.fire({
           icon: 'error',
-          title: error.error.error,
+          title: "La calidad de imagen no es Buena",
         });
       }
     );
@@ -99,8 +113,6 @@ export class FacesComponent implements OnInit {
 
       const resultado: ServerClass = { apellido, nombre, similitud };
       this.resultado = resultado;
-
-      console.log("Resultado-Nombres", this.resultado);
 
       return resultado;
     } catch (err) {
@@ -241,4 +253,5 @@ export class FacesComponent implements OnInit {
   } */
 
   ngOnInit(): void {}
+
 }

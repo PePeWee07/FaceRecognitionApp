@@ -28,11 +28,25 @@
       <h3 class="text-center">Personas Econtradas: <h2 class="perspective">{{ personasEcontradas }}</h2></h3>
       <div class="row justify-content-center">
         <ng-container>
-          <div class="col-md-3 mx-2 my-2" *ngFor="let item of mensaje">
+          <!-- <div class="col-md-3 mx-2 my-2" *ngFor="let item of mensaje; let i = index">
             <div class="card perspective">
               <img [src]="'data:image/png;base64,' + item.imagen" class="card-img-top" alt="iamgenRecortada">
               <div class="card-body">
-                  <!-- <p class="card-text" style="height: 100px; overflow-y: scroll;">{{ item.encoding }}</p> -->
+                  <p class="card-text" style="height: 100px; overflow-y: scroll;">{{ item.encoding }}</p>
+                  <h4>Nombres:</h4>
+                  <p>{{item.nombre}} {{item.apellido}}</p>
+                  <div *ngIf="item.nombre == 'No'">
+                    <button class="btn btn-warning" (click)="guardarPerson(persona, item.encoding)">Guardar</button>
+                  </div>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="col-md-3 mx-2 my-2" *ngFor="let item of respuesta; let i = index">
+            <div class="card perspective">
+              <img [src]="'data:image/png;base64,' + item.imagen" class="card-img-top" alt="iamgenRecortada">
+              <div class="card-body">
+                  <p class="card-text" style="height: 100px; overflow-y: scroll;">{{ item.encodings }}</p>
                   <h4>Nombres:</h4>
                   <p>{{item.nombre}} {{item.apellido}}</p>
                   <div *ngIf="item.nombre == 'No'">
@@ -43,7 +57,6 @@
           </div>
         </ng-container>
       </div>
-
     </div>
   </div>
 

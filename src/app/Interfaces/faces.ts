@@ -3,7 +3,7 @@ export interface Faces {
 }
 
 export interface Server {
-  encoding: number[];
+  encodings: number[];
   imagen:   string;
 
   apellido: any;
