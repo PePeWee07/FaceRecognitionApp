@@ -45,6 +45,7 @@ export class FacesComponent implements OnInit {
         res.server.forEach( (server: Server) => {
           this.respuesta.push(server);
         });
+        this.personasEcontradas = this.respuesta.length;
         console.log("Respuesta: ", this.respuesta);
 
 
@@ -69,7 +70,6 @@ export class FacesComponent implements OnInit {
               server.similitud = 0;
             }
             this.mensaje.push(server);
-            this.personasEcontradas = this.mensaje.length;
           });
 
           console.log("Mensaje: ", this.mensaje);
