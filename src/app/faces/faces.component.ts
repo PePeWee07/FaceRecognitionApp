@@ -34,13 +34,21 @@ export class FacesComponent implements OnInit {
 
   //metodo para calcualr la similitud para las barras de progreso
   calcularSimilitudStyle(similitud: number): string {
-    const porcentaje = (similitud * 100).toFixed(2); // Calcula el porcentaje con dos decimales
-    return `width: ${porcentaje}%`; // Retorna el valor de estilo
+    let porcentaje = (similitud * 100).toFixed(2); // Calcula el porcentaje con dos decimales
+    if( parseFloat(porcentaje) == 0 ){
+      return `width: 5%`;
+    } else {
+      return `width: ${porcentaje}%`; // Retorna el valor de estilo
+    }
   }
 
   calcularSimilitudPorcent(similitud: number): string {
-    const porcentaje = (similitud * 100).toFixed(2);
-    return porcentaje; // Retorna el valor
+    let porcentaje = (similitud * 100).toFixed(2);
+    if( parseFloat(porcentaje) == 0) {
+      return porcentaje = "0";
+    } else {
+      return porcentaje; // Retorna el valor
+    }
   }
 
   //variables para mostrar Cartas de espera

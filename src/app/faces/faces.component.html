@@ -88,7 +88,7 @@
 
                   <div *ngIf="item.nombre != 'No' || item.nombre == 'Error'">
                     <h6>Similitud:</h6>
-                    <div class="progress my-2">
+                    <div class="progress my-2" style="border: 3px solid black;">
                       <div
                         [class]="barColorSimilitud(item.similitud)"
                         role="progressbar"
